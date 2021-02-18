@@ -1,7 +1,7 @@
 # Docker image for a general EPICS Archiver Appliance.
 # It consists of the base image for the mgmt, etl, engine and retrieval Docker containers.
 
-FROM tomcat:9-jdk8-corretto
+FROM tomcat:9.0.43-jdk8-corretto
 
 # User root is required to install all needed packages
 USER root
@@ -12,7 +12,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Updates default image and install required packages
 RUN amazon-linux-extras enable epel && yum clean metadata && yum install -y epel-release &&\
-    yum install -y \
+     yum install -y \
      ant \
      gcc \
      gcc-c++ \
@@ -47,9 +47,9 @@ ENV PATH ${EPICS_BASE}/bin/${EPICS_HOST_ARCH}:${PATH}
 ENV EPICS_CA_AUTO_ADDR_LIST NO
 
 RUN mkdir -p /opt/epics-${EPICS_VERSION} && cd /opt/epics-${EPICS_VERSION} &&\
-    wget https://github.com/epics-base/epics-base/archive/R3.15.8.tar.gz &&\
-    cd /opt/epics-${EPICS_VERSION} && tar -zxf R3.15.8.tar.gz && rm R3.15.8.tar.gz &&\
-    mv epics-base-R3.15.8 base && cd base && make -j$(nproc)
+     wget https://github.com/epics-base/epics-base/archive/R3.15.8.tar.gz &&\
+     cd /opt/epics-${EPICS_VERSION} && tar -zxf R3.15.8.tar.gz && rm R3.15.8.tar.gz &&\
+     mv epics-base-R3.15.8 base && cd base && make -j$(nproc)
 
 # Github repository variables
 ENV GITHUB_REPOSITORY_FOLDER /opt/epicsarchiverap-ldap
@@ -84,3 +84,8 @@ RUN mkdir -p ${ARCHAPPL_LONG_TERM_FOLDER}
 
 RUN mkdir -p ${APPLIANCE_FOLDER}/build/configuration/wait-for-it
 RUN git clone https://github.com/vishnubob/wait-for-it.git ${APPLIANCE_FOLDER}/build/configuration/wait-for-it
+
+ENV JAVA_OPTS_ENGINE ""
+ENV JAVA_OPTS_RETRIEVAL ""
+ENV JAVA_OPTS_ETL ""
+ENV JAVA_OPTS_MGMT ""
