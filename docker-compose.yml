@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   base: # Base image for the appliances
-    image: lnlscon/epics-archiver-base:v2.3
+    image: lnlscon/epics-archiver-base:v2.5
     command: sleep infinity
     build:
       context: "."
@@ -14,7 +14,7 @@ services:
 
   single: # Single container appliances
     hostname: epics-archiver
-    image: lnlscon/epics-archiver-single:v2.4
+    image: lnlscon/epics-archiver-single:v2.5
     env_file: 
       - ./.sql.env
       - ./.ldap.env
