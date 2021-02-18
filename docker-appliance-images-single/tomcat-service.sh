@@ -14,11 +14,39 @@ ${APPLIANCE_FOLDER}/build/scripts/setup-appliance.sh
 
 export JMX_PORT=${APPLIANCE_BASE_JMX_PORT}
 for APPLIANCE_UNIT in "engine" "retrieval" "etl" "mgmt"; do
-    echo "Appliance ${APPLIANCE_UNIT}, JMX_PORT=${JMX_PORT}"
+
+    JAVA_OPTS_APPLIANCE=""
+    set +u
+    if [ "${APPLIANCE_UNIT}" = "engine" ]; then
+        JAVA_OPTS_APPLIANCE=${JAVA_OPTS_ENGINE}
+    fi
+
+    if [ "${APPLIANCE_UNIT}" = "retrieval" ]; then
+        JAVA_OPTS_APPLIANCE=${JAVA_OPTS_RETRIEVAL}
+    fi
+
+    if [ "${APPLIANCE_UNIT}" = "etl" ]; then
+        JAVA_OPTS_APPLIANCE=${JAVA_OPTS_ETL}
+    fi
+
+    if [ "${APPLIANCE_UNIT}" = "mgmt" ]; then
+        JAVA_OPTS_APPLIANCE=${JAVA_OPTS_MGMT}
+    fi
+    set -u
+
+    JMX_OPTS=""
+    JMX_OPTS="${JMX_OPTS} -Dcom.sun.management.jmxremote"
+    JMX_OPTS="${JMX_OPTS} -Dcom.sun.management.jmxremote.port=${JMX_PORT}"
+    JMX_OPTS="${JMX_OPTS} -Dcom.sun.management.jmxremote.ssl=false"
+    JMX_OPTS="${JMX_OPTS} -Dcom.sun.management.jmxremote.authenticate=false"
+
+    set -x
+    echo "---- Appliance ${APPLIANCE_UNIT} ---- JMX_PORT=${JMX_PORT}"
     export CATALINA_BASE=${CATALINA_HOME}/${APPLIANCE_UNIT}
-    export CATALINA_OPTS="${JAVA_OPTS} -Dlog4j.debug -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=${JMX_PORT} -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
-    JMX_PORT=$((JMX_PORT + 1))
+    export CATALINA_OPTS="${JAVA_OPTS_APPLIANCE} ${JAVA_OPTS} ${JMX_OPTS} -Dlog4j.debug"
     ${CATALINA_HOME}/bin/catalina.sh start
+    set +x
+    JMX_PORT=$((JMX_PORT + 1))
 done
 
 tail -f /dev/null
