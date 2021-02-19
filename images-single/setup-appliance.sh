@@ -3,7 +3,9 @@ set -a
 set -e
 set -x
 
-RAND_SRV_PORT=16000
+set -u
+RAND_SRV_PORT=${BASE_TOMCAT_SRV_PORT}
+set +u
 
 [ -z "$MYSQL_SQL_ADDRESS" ] && MYSQL_SQL_ADDRESS=$(getent hosts epics-archiver-mysql-db | awk '{ print $1 }') && echo "Using default MYSQL_SQL_ADDRESS=${MYSQL_SQL_ADDRESS}"
 [ -z "$MYSQL_PORT" ] && MYSQL_PORT=3306 && echo "Using default MYSQL_PORT=${MYSQL_PORT}"

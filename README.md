@@ -26,6 +26,7 @@ This image requires the following parameters when it is executed:
 | JAVA_OPTS_RETRIEVAL     | JVM parameters to be included on the specific tomcat container                                           |         |
 | JAVA_OPTS_ETL           | JVM parameters to be included on the specific tomcat container                                           |         |
 | JAVA_OPTS_MGMT          | JVM parameters to be included on the specific tomcat container                                           |         |
+| BASE_TOMCAT_SRV_PORT    | Base Tomcat server port                                                                                  | 16000   |
 
 ## Building
 
