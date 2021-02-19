@@ -2,8 +2,8 @@
 # arguments: the first is the name of the appliance this image will belong to and
 # the second is the name of the appliance (mgmt, retrieval, etl or engine).
 
-ARG BASE_VER=
-FROM lnlscon/epics-archiver-base:${BASE_VER}
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
 RUN update-ca-trust extract \
   && ln -fs /etc/pki/ca-trust/extracted/java/cacerts ${JAVA_HOME}/jre/lib/security/cacerts
 
@@ -12,7 +12,7 @@ USER root
 
 ENV APPLIANCE_BASE_JMX_PORT 9050
 ENV APPLIANCE_NAME epics-archiver-appliances
-
+ENV BASE_TOMCAT_SRV_PORT 16000
 ENV APPLIANCE_FOLDER /opt/${APPLIANCE_NAME}
 
 RUN mkdir -p ${APPLIANCE_FOLDER}/all

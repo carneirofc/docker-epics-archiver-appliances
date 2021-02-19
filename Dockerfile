@@ -39,7 +39,7 @@ RUN mkdir -p ${APPLIANCE_FOLDER}/build/scripts
 ENV ARCHAPPL_SITEID lnls-control-archiver
 
 # EPICS environment variables
-ENV EPICS_VERSION R3.15.8
+ENV EPICS_VERSION R7.0.4.1
 ENV EPICS_HOST_ARCH linux-x86_64
 ENV EPICS_BASE /opt/epics-${EPICS_VERSION}/base
 ENV PATH ${EPICS_BASE}/bin/${EPICS_HOST_ARCH}:${PATH}
@@ -47,9 +47,9 @@ ENV PATH ${EPICS_BASE}/bin/${EPICS_HOST_ARCH}:${PATH}
 ENV EPICS_CA_AUTO_ADDR_LIST NO
 
 RUN mkdir -p /opt/epics-${EPICS_VERSION} && cd /opt/epics-${EPICS_VERSION} &&\
-     wget https://github.com/epics-base/epics-base/archive/R3.15.8.tar.gz &&\
-     cd /opt/epics-${EPICS_VERSION} && tar -zxf R3.15.8.tar.gz && rm R3.15.8.tar.gz &&\
-     mv epics-base-R3.15.8 base && cd base && make -j$(nproc)
+     wget https://github.com/epics-base/epics-base/archive/${EPICS_VERSION}.tar.gz &&\
+     tar -zxf ${EPICS_VERSION}.tar.gz && rm ${EPICS_VERSION}.tar.gz &&\
+     mv epics-base-* base && cd base && make -j$(nproc)
 
 # Github repository variables
 ENV GITHUB_REPOSITORY_FOLDER /opt/epicsarchiverap-ldap

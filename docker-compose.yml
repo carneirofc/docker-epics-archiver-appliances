@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   base: # Base image for the appliances
-    image: lnlscon/epics-archiver-base:v2.5
+    image: lnlscon/epics-archiver-base:${EPICS_ARCHIVER_BASE_TAG}
     command: sleep infinity
     build:
       context: "."
@@ -14,29 +14,30 @@ services:
 
   single: # Single container appliances
     hostname: epics-archiver
-    image: lnlscon/epics-archiver-single:v2.5
-    env_file: 
-      - ./.sql.env
-      - ./.ldap.env
-      - ./.archiver.env
-    volumes:
-      - ./docker-appliance-images-single/configuration/lnls_appliances.xml:/opt/epics-archiver-appliances/configuration/lnls_appliances.xml:rw
-      - ./docker-appliance-images-single/configuration/lnls_policies.py:/opt/epics-archiver-appliances/configuration/lnls_policies.py:ro
+    image: lnlscon/epics-archiver-single:${EPICS_ARCHIVER_SINGLE_TAG}
     build:
-      context: "./docker-appliance-images-single"
+      context: "./images-single"
       dockerfile: "Dockerfile"
       args:
-        - BASE_VER=v2.1-dev
+        - BASE_IMAGE=lnlscon/epics-archiver-base:${EPICS_ARCHIVER_BASE_TAG}
       labels:
         - "br.com.lnls-sirius.department=GCS"
         - "br.com.lnls-sirius.description=Archiver appliances"
         - "br.com.lnls-sirius.maintener=Claudio Ferreira Carneiro"
         - "br.com.lnls-sirius.repo=https://github.com/lnls-sirius/docker-epics-archiver-appliances"
+        - "br.com.lnls-sirius.base=lnlscon/epics-archiver-base:${EPICS_ARCHIVER_BASE_TAG}"
+    env_file:
+      - ./.sql.env
+      - ./.ldap.env
+      - ./.archiver.env
+    volumes:
+      - ./images-single/configuration/lnls_appliances.xml:/opt/epics-archiver-appliances/configuration/lnls_appliances.xml:rw
+      - ./images-single/configuration/lnls_policies.py:/opt/epics-archiver-appliances/configuration/lnls_policies.py:ro
 
   epics-archiver-mysql-db:
     hostname: epics-archiver-mysql-db
     image: lnlscon/epics-archiver-mysql-db:latest
-    env_file: 
+    env_file:
       - ./.sql.env
     volumes:
       - /etc/localtime:/etc/localtime:ro
